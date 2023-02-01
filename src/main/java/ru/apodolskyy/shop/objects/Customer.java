@@ -11,6 +11,7 @@ import ru.apodolskyy.shop.interfaces.ICustomer;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Customer implements ICustomer {
+    // TODO переменные лучше делать private (в других классах тоже)
 
     public String name;
     public String surname;

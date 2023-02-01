@@ -12,6 +12,7 @@ import ru.apodolskyy.shop.interfaces.IProduct;
 @AllArgsConstructor
 public class Product implements IProduct {
 
+
     public String item;
     public Integer price;
 
