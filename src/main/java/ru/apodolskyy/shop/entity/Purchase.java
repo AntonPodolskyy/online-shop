@@ -1,27 +1,26 @@
-package ru.apodolskyy.shop.objects;
+package ru.apodolskyy.shop.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.apodolskyy.shop.interfaces.ICustomer;
-import ru.apodolskyy.shop.interfaces.IProduct;
-import ru.apodolskyy.shop.interfaces.IPurchase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Setter
 @Getter
-public class Purchase implements IPurchase {
+public class Purchase{
 
-    String orderTime;
-    ICustomer customer;
-    IProduct product;
+    private Long id;
+    private String orderTime;
+    private Customer customer;
+    private Product product;
 
     // при создании заказа добавляется текущая дата и время
-    public Purchase(Customer customer, Product product) {
+    public Purchase(Long id, Customer customer, Product product) {
         this.orderTime = new SimpleDateFormat("dd-MM-yyyy hh-mm-ss").format(new Date());
         this.customer = customer;
         this.product = product;
+        this.id = id;
     }
 }
 

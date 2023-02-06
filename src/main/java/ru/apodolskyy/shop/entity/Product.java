@@ -1,22 +1,22 @@
-package ru.apodolskyy.shop.objects;
+package ru.apodolskyy.shop.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.apodolskyy.shop.interfaces.IProduct;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product implements IProduct {
+public class Product{
 
-
-    public String item;
-    public Integer price;
+    private Long id;
+    private String item;
+    private Integer price;
 
     public Product(String item) {
+        this.id = 0L;
         this.item = item;
         this.price = null;
     }
