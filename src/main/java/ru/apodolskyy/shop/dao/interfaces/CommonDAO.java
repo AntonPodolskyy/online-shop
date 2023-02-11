@@ -11,7 +11,7 @@ public interface CommonDAO <T>{
     // Update existing
     void update(T obj);
 
-    // Delete existing by ID
-    void delete(long id);
+    // Delete existing
+    void delete(T obj);
 
 }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.Objects;
 
 @Setter
@@ -22,11 +21,6 @@ public class Product{
         this.item = item;
         this.price = null;
     }
-
-
-    // TODO желательно еще задать сравнение в объектах, которые участвуют в коллекциях, как у нас
-    // Например по id, и тогда во всем местах, где идет поиск/сравнение - сразу будет отрабатывать equals и hashCode - сильно сокращает код
-
 
     @Override
     public boolean equals(Object o) {
