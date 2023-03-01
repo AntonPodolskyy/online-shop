@@ -8,6 +8,8 @@ import ru.apodolskyy.shop.entity.Purchase;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// TODO обычно прописывают минимально необходимый test coverage по главному функциноалу - и проверяют его покрытие
+
 class PurchaseDAOImplTest {
 
     Product product1 = new Product(1L,"Хлеб", 85);

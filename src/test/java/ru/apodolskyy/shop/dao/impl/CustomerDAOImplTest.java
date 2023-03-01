@@ -6,6 +6,8 @@ import ru.apodolskyy.shop.entity.Customer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// TODO можно исп метод с аннотацией @BeforeAll, чтобы проиниц. данные
+
 class CustomerDAOImplTest {
 
     Customer customer1 = new Customer(1L,"Ivan", "Ivanov", "customer1", "12345");

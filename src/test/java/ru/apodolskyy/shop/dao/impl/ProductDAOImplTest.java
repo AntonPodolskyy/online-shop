@@ -6,6 +6,8 @@ import ru.apodolskyy.shop.entity.Product;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// в тесты желательно добавлять не только assertEquals или assertNull, но и многие другие - для разнообразия. Иначе тесты становятся однотипными и можно пропустить функционал
+
 class ProductDAOImplTest {
 
     Product product1 = new Product(1L,"Хлеб", 85);
