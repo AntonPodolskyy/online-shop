@@ -1,14 +1,15 @@
 package ru.apodolskyy.shop.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class Purchase{
 
     private Long id;
@@ -34,7 +35,7 @@ public class Purchase{
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Math.toIntExact(id);
     }
 }
 
