@@ -17,7 +17,8 @@ public class Purchase{
     private Customer customer;
     private Product product;
 
-    // при создании заказа добавляется текущая дата и время
+    // при создании заказа добавляется текущая дата и время - реализовано в БД
+    @Deprecated
     public Purchase(Long id, Customer customer, Product product) {
         this.orderTime = new SimpleDateFormat("dd-MM-yyyy hh-mm-ss").format(new Date());
         this.customer = customer;
