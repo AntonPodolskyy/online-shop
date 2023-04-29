@@ -9,6 +9,11 @@ repositories {
     mavenCentral()
 }
 
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 dependencies {
 
     // JUnit
@@ -16,12 +21,22 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
     implementation'org.junit.platform:junit-platform-launcher:1.9.2'
 
-    //Hibernate
-//    implementation 'org.hibernate.orm:hibernate-core:6.1.6.Final'
-
     // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    //Hibernate
+    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.2.0.Final'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
+
+    //Log4j
+    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+
+    // кеширование 2го уровня
+    implementation 'org.hibernate:hibernate-jcache:6.1.7.Final'
+    implementation 'org.ehcache:ehcache:3.10.6'
+
 }
 
 

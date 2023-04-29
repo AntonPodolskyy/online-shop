@@ -1,91 +1,95 @@
 package ru.apodolskyy.shop.dao.impl;
 
-// TODO можно исп метод с аннотацией @BeforeAll, чтобы проиниц. данные +
-
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.apodolskyy.shop.HibernateUtil_customers;
 import ru.apodolskyy.shop.entity.Customer;
-
+import ru.apodolskyy.shop.entity.CustomerRole;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerDAOImplTest {
 
-    private static final Customer customer1 = new Customer();
-    private static final Customer customer2 = new Customer();
+    static CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+    static Customer customer = new Customer();
+    static Long customerId;
 
-    private static final CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+    static CustomerRoleDAOImpl customerRoleDAO = new CustomerRoleDAOImpl();
+
+//    static Long customerRoleId;
 
     @BeforeAll
-    public static void initCustomers() {
-        customer1.setId(1L);
-        customer1.setName("Ivan");
-        customer1.setSurname("Ivanov");
-        customer1.setEmail("customer1");
-        customer1.setPassword("12345");
+    static void addCustomer() {
 
-        customer2.setId(2L);
-        customer2.setName("Petr");
-        customer2.setSurname("Petrov");
-        customer2.setEmail("customer2");
-        customer2.setPassword("23456");
+        customer.setCustomerName("customerNameTest");
+        customer.setCustomerSurname("customerSurnameTest");
+        customer.setCustomerEmail("customerEmailTest");
+        customer.setCustomerPassword("customerPasswordTest");
+        customerDAO.add(customer);
+        customerId = customer.getId();
+    }
 
-        customerDAO.add(customer1);
-        customerDAO.add(customer2);
+    @AfterAll
+    static void deleteCustomer() {
+        customerDAO.delete(customerId);
+        assertNull(customerDAO.get(customerId));
+        HibernateUtil_customers.close();
     }
 
     @Test
-    @DisplayName("Extra tests for entity Customer")
-    void product(){
-        Customer customer3 = new Customer(3L, "TestName","TestSurname","TestEmail","pass");
-        assertEquals(3L, customer3.hashCode());
-        assertFalse(customer3.equals(customer2));
+    void getCustomer() {
+         assertEquals(customer,customerDAO.get(customerId));
     }
 
     @Test
-    @DisplayName("Get existing and not existing customers")
-    void get() {
-        assertEquals(customer1, customerDAO.get(1L));
-        assertNull(customerDAO.get(9L));
+    void updateCustomer() {
+        customer.setCustomerName("Test");
+        customerDAO.update(customer);
+        assertTrue(customerDAO.get(customerId).getCustomerName().equals("Test"));
     }
 
     @Test
-    @DisplayName("Add 3 customers")
-    void addNewCustomers() {
-        assertEquals(1L ,customerDAO.get(1L).getId());
-        assertEquals(2L ,customerDAO.get(2L).getId());
+    void findAllCustomers() {
+        List<Customer> list = customerDAO.findAll();
+        assertFalse(list.isEmpty());
     }
 
     @Test
-    @DisplayName("Update existing customer")
-    void update() {
-        customer1.setName("Artem");
-        customerDAO.update(customer1);
-        assertTrue("Artem" == customerDAO.get(1L).getName());
+    void FindAllCustomersByEmail() {
+        assertFalse(customerDAO.findAll("customerEmailTest").isEmpty());
     }
 
     @Test
-    @DisplayName("Delete customer as object")
-    void delete() {
-        customerDAO.delete(customer1);
-        customerDAO.delete(customer2);
-        assertTrue(customerDAO.findAll().isEmpty());
-        customerDAO.add(customer1);
-        customerDAO.add(customer2);
+    void getCustomerByEmail() {
+        assertEquals(customerDAO.getByEmail("customerEmailTest"), customer);
+    }
+
+
+    // CustomerRoleDAOImpl test
+    @Test
+    void getAndSetCustomerRole() {
+        assertEquals(2L, customerDAO.get(customerId).getCustomerRole().getRoleDataId());
+
+        CustomerRoleDAOImpl customerRoleDAO = new CustomerRoleDAOImpl();
+        CustomerRole customerRole = customerRoleDAO.get(customerId);
+        customerRole.setRoleDataId(1L);
+        customerRoleDAO.update(customerRole);
+
+        assertEquals(1L, customerDAO.get(customerId).getCustomerRole().getRoleDataId());
     }
 
     @Test
-    @DisplayName("Show all customers")
-    void findAll() {
-        assertFalse(customerDAO.findAll().isEmpty());
-
+    void findAllCustomersRole() {
+        List<CustomerRole> list = customerRoleDAO.findAll();
+        assertFalse(list.isEmpty());
     }
 
     @Test
-    @DisplayName("Find customer by email")
-    void findAllByEmail() {
-        assertFalse(customerDAO.findAll("customer1").isEmpty());
-        assertTrue(customerDAO.findAll("Unknown").isEmpty());
+    void FindAllCustomersRoleByEmail() {
+        assertFalse(customerRoleDAO.findAll("customerEmailTest").isEmpty());
+        assertTrue(customerRoleDAO.findAll("sdfwre34rdfawq2342rsafdqw4").isEmpty());
 
     }
+
 }

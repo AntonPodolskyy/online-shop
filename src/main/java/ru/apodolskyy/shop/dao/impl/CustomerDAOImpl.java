@@ -1,89 +1,106 @@
 package ru.apodolskyy.shop.dao.impl;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+import ru.apodolskyy.shop.HibernateUtil_customers;
 import ru.apodolskyy.shop.dao.interfaces.objects.CustomerDAO;
 import ru.apodolskyy.shop.entity.Customer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerDAOImpl implements CustomerDAO {
 
-    private static final ArrayList<Customer> customers = new ArrayList<>();
-
     /**
-     * Получение клиента по ID
-     * @param id - id
-     * @return объект "Клиент"
+     * Get Customer by ID
+     * @param id of Customer
+     * @return obj "Customer"
      */
     @Override
     public Customer get(long id) {
-        for (Customer customer : customers) {
-            if (customer.getId() == id) {
-                return customer;
-            }
-        }
-        return null;
+        Session session = HibernateUtil_customers.getSessionFactory().openSession();
+        Customer customer = session.get(Customer.class, id);
+        session.close();
+        return customer;
     }
 
     /**
-     * Добавление объекта "Клиент" в БД
-     * @param obj объект "Клиент"
+     * Add new “Customer” to DB
+     * @param obj "Customer"
      */
     @Override
     public void add(Customer obj) {
-        customers.add(obj);
+        Session session = HibernateUtil_customers.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.persist(obj);
+        session.getTransaction().commit();
+        session.close();
     }
 
     /**
-     * Обновление объект "Клиент" (по ID)
-     * @param obj объект "Клиент"
+     * Update obj "Customer"
+     * @param obj "Customer"
      */
     @Override
     public void update(Customer obj) {
-        for (Customer customer : customers) {
-            if (obj.getId().equals(customer.getId())) {
-                customers.remove(customer);
-                customers.add(obj);
-                break;
-            }
-        }
+        Session session = HibernateUtil_customers.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.merge(obj);
+        session.getTransaction().commit();
+        session.close();
     }
 
     /**
-     * Удаление объект "Клиент"
-     * @param customer объект "Клиент"
+     * Delete obj "Customer" by ID
      */
     @Override
-    public void delete(Customer customer) {
-        customers.remove(customer);
+    public void delete(long id) {
+        Session session = HibernateUtil_customers.getSessionFactory().openSession();
+        session.beginTransaction();
+        Customer customer = get(id);
+        session.remove(customer);
+        session.getTransaction().commit();
+        session.close();
     }
 
     /**
-     * Возврат коллекции со всеми объектами "Клиент"
-     * @return коллекция объектов "Клиент"
+     * Find all "Customer"
+     * @return List "Customer"
      */
     @Override
     public List<Customer> findAll() {
-        return customers;
+        Session session = HibernateUtil_customers.getSessionFactory().openSession();
+        Query<Customer> query = session.createQuery("FROM Customer", Customer.class);
+        List<Customer> list = query.getResultList();
+        session.close();
+        return list;
     }
 
 
     /**
-     * Возврат коллекции с объектами "Клиент" имеющими заданный Email
-     * @return коллекция отобранных объектов "Клиент"
+     * Find all “Customer” by Email
+     * @return List "Customer"
      */
     @Override
     public List<Customer> findAll(String email) {
+        Session session = HibernateUtil_customers.getSessionFactory().openSession();
+        Query<Customer> query = session.createQuery("FROM Customer WHERE customerEmail LIKE :email", Customer.class);
+        query.setParameter("email", "%" + email + "%");
+        List<Customer> list = query.getResultList();
+        session.close();
+        return list;
+    }
 
-        List<Customer> findResult = new ArrayList<>();
-
-        for (Customer customer : customers){
-            if (customer.getEmail().equals(email)){
-                findResult.add(customer);
-            }
-        }
-
-        return findResult;
+    /**
+    * Find single “Customer” by email
+    */
+    @Override
+    public Customer getByEmail(String email){
+        Session session = HibernateUtil_customers.getSessionFactory().openSession();
+        Query<Customer> query = session.createQuery("FROM Customer WHERE customerEmail = :email", Customer.class);
+        query.setParameter("email", email);
+        Customer customer = query.uniqueResult();
+        session.close();
+        return customer;
     }
 
 }

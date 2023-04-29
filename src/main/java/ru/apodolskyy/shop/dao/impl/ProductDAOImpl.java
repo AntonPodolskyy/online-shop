@@ -1,84 +1,91 @@
 package ru.apodolskyy.shop.dao.impl;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+import ru.apodolskyy.shop.HibernateUtil_purchases;
 import ru.apodolskyy.shop.dao.interfaces.objects.ProductDAO;
-import ru.apodolskyy.shop.entity.*;
-import java.util.ArrayList;
+import ru.apodolskyy.shop.entity.Product;
+
 import java.util.List;
 
 public class ProductDAOImpl implements ProductDAO {
 
-    private final ArrayList<Product> products = new ArrayList<>();
-
     /**
-     * Получение товара по ID
-     * @param id - id
-     * @return объект "Товар"
+     * Get Product by ID
+     * @param id Product
+     * @return obj "Product"
      */
     @Override
     public Product get(long id) {
-        for (Product product : products){
-            if (product.getId() == id){
-                return product;
-            }
-        }
-        return null;
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        Product product = session.get(Product.class, id);
+        session.close();
+        return product;
     }
 
     /**
-     * Добавление объекта "Товар" в БД
-     * @param obj объект "Товар"
+     * Add new “Product” to DB
+     * @param obj "Product"
      */
     @Override
     public void add(Product obj) {
-        products.add(obj);
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.persist(obj);
+        session.getTransaction().commit();
+        session.close();
     }
 
     /**
-     * Обновление объекта "Товар" (По ID)
-     * @param obj объект "Товар"
+     * Update "Product"
+     * @param obj "Product"
      */
     @Override
     public void update(Product obj) {
-        for (Product product : products){
-            if (obj.getId().equals(product.getId())){
-                products.remove(product);
-                products.add(obj);
-                break;
-            }
-        }
-
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.merge(obj);
+        session.getTransaction().commit();
+        session.close();
     }
 
     /**
-     * Удаление объект "Товар"
-     * @param product объект "Товар"
+     * Delete "Product"
      */
     @Override
-    public void delete(Product product) {
-        products.remove(product);
+    public void delete(long id) {
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        session.beginTransaction();
+        Product product = get(id);
+        session.remove(product);
+        session.getTransaction().commit();
+        session.close();
     }
 
     /**
-     * Возврат коллекции со всеми объектами "Товар"
-     * @return коллекция объектов "Товар"
+     * Get all "Product"
+     * @return List "Product"
      */
     @Override
     public List<Product> findAll() {
-        return products;
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        Query<Product> query = session.createQuery("FROM Product", Product.class);
+        List<Product> list = query.getResultList();
+        session.close();
+        return list;
     }
 
     /**
-     * Возврат коллекции с объектами "Товар" имеющими заданное наименование
-     * @return коллекция отобранных объектов "Товар"
+     * Get all “Product” with specific item
+     * @return List "Product"
      */
     @Override
     public List<Product> findAll(String item) {
-        List<Product> productListByItem = new ArrayList<>();
-        for (Product product : products){
-            if (product.getItem().equals(item)){
-                productListByItem.add(product);
-            }
-        }
-        return productListByItem;
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        Query<Product> query = session.createQuery("FROM Product WHERE item LIKE :item", Product.class);
+        query.setParameter("item", "%" + item + "%");
+        List<Product> list = query.getResultList();
+        session.close();
+        return list;
     }
 }

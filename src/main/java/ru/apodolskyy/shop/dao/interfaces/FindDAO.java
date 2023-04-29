@@ -8,6 +8,6 @@ public interface FindDAO<T> {
     List<T> findAll();
 
     // Get by specific string
-    List<T> findAll(String findParameter);
+    List<T> findAll(String email);
 
 }

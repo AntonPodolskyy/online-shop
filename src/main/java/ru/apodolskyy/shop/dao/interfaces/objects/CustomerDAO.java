@@ -6,4 +6,6 @@ import ru.apodolskyy.shop.entity.Customer;
 
 public interface CustomerDAO extends CommonDAO<Customer>, FindDAO<Customer> {
 
+    Customer getByEmail(String email);
+
 }

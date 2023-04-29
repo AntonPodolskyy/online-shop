@@ -1,87 +1,94 @@
 package ru.apodolskyy.shop.dao.impl;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+import ru.apodolskyy.shop.HibernateUtil_purchases;
 import ru.apodolskyy.shop.dao.interfaces.objects.PurchaseDAO;
 import ru.apodolskyy.shop.entity.Purchase;
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class PurchaseDAOImpl implements PurchaseDAO {
 
-    private final ArrayList<Purchase> purchases = new ArrayList<>();
 
     /**
-     * Получение заказа по ID
+     * Get Purchase by ID
      * @param id - id
-     * @return объект "Заказ"
+     * @return obj "Purchase"
      */
     @Override
     public Purchase get(long id) {
-        for (Purchase purchase : purchases){
-            if (purchase.getId() == id){
-                return purchase;
-            }
-        }
-        return null;
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        Purchase purchase = session.get(Purchase.class, id);
+        session.close();
+        return purchase;
     }
 
     /**
-     * Добавление объекта "Заказ" в БД
-     * @param obj объект "Заказ"
+     * Add “Purchase” to DB
+     * @param obj "Purchase"
      */
     @Override
     public void add(Purchase obj) {
-        purchases.add(obj);
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.persist(obj);
+        session.getTransaction().commit();
+        session.close();
     }
 
     /**
-     * Обновление объект "Заказ" (по ID)
-     * @param obj объект "Заказ"
+     * Update "Purchase" in DB (by ID)
+     * @param obj "Purchase"
      */
     @Override
     public void update(Purchase obj) {
-        for (Purchase purchase : purchases){
-            if (obj.getId().equals(purchase.getId())){
-                purchases.remove(purchase);
-                purchases.add(obj);
-                break;
-            }
-        }
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.merge(obj);
+        session.getTransaction().commit();
+        session.close();
     }
 
     /**
-     * Удаление объект "Заказ"
-     * @param purchase объект "Заказ"
+     * Delete "Purchase"
      */
     @Override
-    public void delete(Purchase purchase) {
-        purchases.remove(purchase);
+    public void delete(long id) {
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        session.beginTransaction();
+        Purchase purchase = get(id);
+        session.remove(purchase);
+        session.getTransaction().commit();
+        session.close();
     }
 
     /**
-     * Возврат коллекции со всеми объектами "Заказ"
-     * @return коллекция объектов "Заказ"
+     * Find all "Purchase"
+     * @return List "Purchase"
      */
     @Override
     public List<Purchase> findAll() {
-        return purchases;
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        Query<Purchase> query = session.createQuery("FROM Purchase", Purchase.class);
+        List<Purchase> list = query.getResultList();
+        session.close();
+        return list;
     }
+
 
     /**
-     * Возврат коллекции с объектами "Заказ" имеющими заданный Surname объекта Customer
-     * @return коллекция отобранных объектов "Заказ"
+     * Find all Customers "Purchase" (by Customers ID)
+     * @return List "Purchase"
      */
     @Override
-    public List<Purchase> findAll(String surname) {
-
-        List<Purchase> findResult = new ArrayList<>();
-
-        for (Purchase purchase : purchases){
-            if (purchase.getCustomer().getSurname().equals(surname)){
-                findResult.add(purchase);
-            }
-        }
-        return findResult;
+    public List<Purchase> findAll(Long customerId) {
+        Session session = HibernateUtil_purchases.getSessionFactory().openSession();
+        Query<Purchase> query = session.createQuery("FROM Purchase WHERE customerId = :customerId", Purchase.class);
+        query.setParameter("customerId", customerId);
+        List<Purchase> list = query.getResultList();
+        session.close();
+        return list;
     }
-
 
 }
