@@ -11,7 +11,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
 @Entity
 @Table(name = "customer_data", schema = "customers", catalog = "onlineshop_customers")
 public class Customer {

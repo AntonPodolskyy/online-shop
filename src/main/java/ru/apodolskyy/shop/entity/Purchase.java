@@ -3,6 +3,7 @@ package ru.apodolskyy.shop.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -35,7 +36,8 @@ public class Purchase {
      */
     @Basic
     @Column(name = "on_delivery")
-    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
+//    @Convert(converter = org.hibernate.type.NumericBooleanType.class) // For Hibernate 6.2
+    @Type(type = "org.hibernate.type.NumericBooleanType")
     private Boolean onDelivery = false;
 
     /**
@@ -43,7 +45,8 @@ public class Purchase {
      */
     @Basic
     @Column(name = "paid")
-    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
+//    @Convert(converter = org.hibernate.type.NumericBooleanType.class) // For Hibernate 6.2
+    @Type(type = "org.hibernate.type.NumericBooleanType")
     private Boolean paid = false;
 
     /**

@@ -11,7 +11,10 @@
         <property name="connection.password">rootroot</property>
 
         <property name="hibernate.cache.use_second_level_cache">true</property>
+        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.jcache.internal.JCacheRegionFactory</property>
+
         <property name="hibernate.generate_statistics">true</property>
+
         <mapping class="ru.apodolskyy.shop.entity.Product"/>
         <mapping class="ru.apodolskyy.shop.entity.Purchase"/>
         <mapping class="ru.apodolskyy.shop.entity.PurchasedProducts"/>

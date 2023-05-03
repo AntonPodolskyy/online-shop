@@ -168,12 +168,14 @@ class MainTest {
     @Test
     void purchasedProducts_Update(){
         // TODO 29.04.2023: При вкл кеше, даже TRANSACTIONAL - не загружаются актуальные данные из БД. Кеш для entity отключен
-        // Expected 42 because Product1 price 14 * product1Qty 3
+        // Expected 42 because Product1 price = 14 * product1Qty = 3
         assertEquals(42D, purchasedProductsDAO.get(purchasedProduct1Id).getTotalAmount());
-        // Changing qty. 12 * 10 = 128
+
         purchasedProduct1 = purchasedProductsDAO.get(purchasedProduct1Id);
         purchasedProduct1.setProductQty(10D);
         purchasedProductsDAO.update(purchasedProduct1);
+
+        // Expected 140 because Product1 price = 14 * product1Qty = 10
         assertEquals(140D, purchasedProductsDAO.get(purchasedProduct1Id).getTotalAmount());
     }
 
